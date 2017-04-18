@@ -1,0 +1,6 @@
+[submodule "src/gradient"]
+	path = src/gradient
+	url = git@github-BauData:BauData/gradient.git
+[submodule "src/landscape"]
+	path = src/landscape
+	url = git@github-BauData:BauData/landscape.git
