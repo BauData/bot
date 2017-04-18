@@ -1,0 +1,17 @@
+{
+  "name": "socialNetworksNode",
+  "version": "0.0.2",
+  "private": true,
+  "files": [
+    "lib/"
+  ],
+  "main": "./lib/index",
+  "dependencies": {
+    "flickr-sdk": "^2.0.1",
+    "instagram-private-api": "^0.5.15",
+    "should": "^11.2.1",
+    "tumblr.js": "^1.1.1",
+    "twit": "^2.2.5",
+    "vimeo": "^1.2.0"
+  }
+}

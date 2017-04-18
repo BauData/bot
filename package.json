@@ -1,0 +1,51 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "Bot project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BauData/bot.git"
+  },
+  "keywords": [
+    "animation",
+    "data",
+    "bot",
+    "code"
+  ],
+  "author": "BauData team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BauData/bot/issues"
+  },
+  "homepage": "https://github.com/BauData/bot#readme",
+  "dependencies": {
+    "atutil": "file:atutil/atutil-0.0.1.tgz",
+    "child_process": "^1.0.2",
+    "express": "^4.15.2",
+    "google-elevation-api": "^1.0.0",
+    "grunt": "^1.0.1",
+    "grunt-browserify": "^5.0.0",
+    "grunt-chmod": "^1.1.1",
+    "grunt-concurrent": "^2.3.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-uglify": "^2.2.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-mkdir": "^1.0.0",
+    "grunt-nodemon": "^0.4.2",
+    "node-rest-client": "^3.0.7",
+    "openweathermap": "^1.0.0",
+    "socialNetworksNode": "file:socialNetworksNode/socialNetworksNode-0.0.2.tgz",
+    "socket.io": "^1.7.3",
+    "socket.io-client": "^1.7.3",
+    "three": "^0.84.0",
+    "tween.js": "^16.6.0",
+    "wait-on": "^2.0.2"
+  },
+  "devDependencies": {}
+}
