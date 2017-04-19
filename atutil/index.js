@@ -71,7 +71,7 @@ ATUtil.prototype.rmDir = function (dirPath) {
       		if (fs.statSync(filePath).isFile())
         		fs.unlinkSync(filePath);
       		else
-        		rmDir(filePath);
+        		this.rmDir(filePath);
    		}
 	//fs.rmdirSync(dirPath);
 };
