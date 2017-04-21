@@ -57,6 +57,35 @@ var self = module.exports = {
 	});
   },
 
+  postingPhoto: function (filePath, textMedia) {
+	fs.stat(filePath, function(err, stat) {
+		if(err == null) {
+			console.log("TWITTER: Posting a photo..");
+			var b64content = fs.readFileSync(filePath, { encoding: 'base64' })
+			T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+			  // now we can assign alt text to the media, for use by screen readers and 
+			  // other text-based presentations and interpreters 
+			  var mediaIdStr = data.media_id_string;
+			  var altText = textMedia;
+			  var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } };
+ 
+			  T.post('media/metadata/create', meta_params, function (err, data, response) {
+			    if (!err) {
+			      // now we can reference the media and post a tweet (media will attach to the tweet) 
+			      var params = { status: textMedia, media_ids: [mediaIdStr] }
+			 
+			      T.post('statuses/update', params, self.postTweet);
+			    }
+			    else{
+					console.log("TWITTER: Error");
+					console.log(err);
+				}
+			  })
+			})
+		}
+	});
+  },
+
   postTweet: function (err, data, response) {
 	if (!err) {
 		console.log("TWITTER: A tweet posted");
@@ -74,7 +103,7 @@ var self = module.exports = {
   followed: function (event) {	
 	var screenName = event.source.screen_name;
 	var screenNameTarget = event.target.screen_name;
-	if (screenName != userName) {
+	if (screenName != userName && userName) {
 		console.log("TWITTER: Follow event");
   		var text = '.@' + screenName + " do you like gradients?";
 		self.tweetIt(text);
@@ -93,9 +122,8 @@ var self = module.exports = {
 
   tweetEvent: function (eventMsg) {
 	var replyTo = eventMsg.in_reply_to_screen_name;
-	//var text = eventMsg.text;
 	var from = eventMsg.user.screen_name;
-	if (replyTo === userName) {
+	if (replyTo === userName && replyTo && from != userName) {
 		console.log("TWITTER: Tweet event");
 		var newTweet = '.@' + from + ' thank you for tweeting me!';
 		self.tweetIt(newTweet);

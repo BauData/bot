@@ -12,8 +12,7 @@ var shader = '';
 var randomCityData;
 var weatherText = '';
 var weatherTemp = '';
-var colors;
-var frameLimit = 180;
+var frameLimit;
 var timing = 30 * 60 * 1000;
 
 ATUtil.rmDir('./media');
@@ -72,7 +71,7 @@ function newConnection(socket) {
 	socket.on("shader", setShader);
 	socket.on("weather", setWeather);
 	socket.on("bot", setBot);
-	socket.emit('frameLimit', frameLimit);
+	socket.on('frameLimit', setFrameLimit);
 
 	function setShader (data) {
 		shader = data;
@@ -92,7 +91,7 @@ function newConnection(socket) {
 	 		noiseVideoFile : folderPath + 'outputnoise.mp4',
 	 		gifFile : folderPath + 'output.gif',
 	 		gifLossyFile : folderPath + 'outputlossy.gif',
-	 		imgVideoCover : folderPath + 'outputcover.jpg'
+	 		imgCover : folderPath + 'outputcover.jpg'
 		 };
 		 console.log("fileObject is set");
 	}
@@ -105,8 +104,10 @@ function newConnection(socket) {
 	function setWeather (data) {
 		weatherText = data.description;
 		weatherTemp = data.temperature;
-		colors = data.colors;
 		console.log("weather fields are set");
+	}
+	function setFrameLimit(data) {
+    	frameLimit = data;
 	}
 
 	function coverFrame(data) {
@@ -116,7 +117,22 @@ function newConnection(socket) {
 			console.log("Creating a cover frame..");
 			data = data.split(',')[1]; // Get rid of the data:image/png;base64 at the beginning of the file data
 	        var buffer = new Buffer(data, 'base64');
-			fs.writeFileSync(fileObject.imgVideoCover, buffer.toString('binary'), 'binary');
+			fs.writeFileSync(fileObject.imgCover, buffer.toString('binary'), 'binary');
+			if(frameLimit == 1) {
+				socket.broadcast.emit('closeMsg', 1);
+				var opts = {
+					resources: [fileObject.imgCover],
+					window: 6000
+				}
+				waitOn(opts, function (err) {
+				  if (err) { 
+				  	return console.log(err); 
+				  }
+				  //removing all temp images
+				  ATUtil.rmDir('./tmp');
+				  postingAll();
+				});
+			}
 		}
 	}
 
@@ -131,11 +147,8 @@ function newConnection(socket) {
 				createGIF();
 				var opts = {
 					resources: [fileObject.noiseVideoFile, fileObject.gifLossyFile],
-					//optional stabilization time in ms, default 750ms. Waits this amount of time for file sizes
-					// to stabilize or other resource availability to remain unchanged.
 					window: 60000
 				}
-				//wait-on is a cross-platform command line utility which will wait for files
 				waitOn(opts, function (err) {
 				  if (err) { 
 				  	return console.log(err); 
@@ -156,11 +169,8 @@ function newConnection(socket) {
 		function videoFinished(filePath) {
 			var opts = {
 				resources: [filePath],
-				//optional stabilization time in ms, default 750ms. Waits this amount of time for file sizes
-				// to stabilize or other resource availability to remain unchanged.
 				window: 60000
 			}
-			//wait-on is a cross-platform command line utility which will wait for files
 			waitOn(opts, function (err) {
 			  if (err) { 
 			  	return console.log(err); 
@@ -190,11 +200,8 @@ function newConnection(socket) {
 		function gifFinished(filePath) {
 			var opts = {
 				resources: [filePath],
-				//optional stabilization time in ms, default 750ms. Waits this amount of time for file sizes
-				// to stabilize or other resource availability to remain unchanged.
 				window: 60000
 			}
-			//wait-on is a cross-platform command line utility which will wait for files
 			waitOn(opts, function (err) {
 			  if (err) { 
 			  	return console.log(err); 
@@ -227,8 +234,12 @@ function postingAll() {
  		'#' + weatherText.replace(/ /g,"_"),
  		'#' + weatherTemp + 'C'
  	];
- 	shader += ' u_colorA=(' + colors.colorA + '),u_colorB=(' + colors.colorB +')';
-	socialNetworksNode.posting(customTags, shader, fileObject);
+ 	if(frameLimit != 1) {
+		socialNetworksNode.posting(customTags, shader, fileObject);
+ 	}
+ 	else {
+ 		socialNetworksNode.postingPhoto(customTags, shader, fileObject.imgCover);
+ 	}
 }
 
 

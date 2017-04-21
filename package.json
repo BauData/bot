@@ -45,7 +45,8 @@
     "socket.io-client": "^1.7.3",
     "three": "^0.84.0",
     "tween.js": "^16.6.0",
-    "wait-on": "^2.0.2"
+    "wait-on": "^2.0.2",
+    "youtube-api": "^2.0.8"
   },
   "devDependencies": {}
 }

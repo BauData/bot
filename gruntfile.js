@@ -12,7 +12,8 @@ module.exports = function(grunt) {
         expand: true,
         cwd: 'src/',
         src: ['**/js/scripts.js'],
-        dest: 'src/'
+        dest: 'dist/',
+        ext: '.min.js'
       }
     },
     mkdir: {
@@ -133,7 +134,7 @@ module.exports = function(grunt) {
         'copy',
         'custom-concat',
         'browserify',
-        'uglify',
+        //'uglify',
         'concurrent'
     ];
     grunt.task.run(taskList);

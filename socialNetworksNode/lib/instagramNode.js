@@ -52,7 +52,24 @@ var self = module.exports = {
 				    })
 				 })
 			}
+		});
+	},
 
+	postingPhoto: function (picturePath, textMedia) {
+		fs.stat(picturePath, function(err, stat) {
+			if(err == null) {
+			    console.log("INSTAGRAM: Posting a photo..");
+				Client.Session.create(device, storage, username, password)
+				.then(function(session) { 
+					return [session, Client.Upload.photo(session, picturePath)]
+				})
+			    .spread(function(session, upload) { 
+			        return Client.Media.configurePhoto(session, upload.params.uploadId, textMedia)
+			    })
+				.then(function(medium) {
+			        console.log("INSTAGRAM: photo posted")
+			    })
+			}
 		});
 	},
 
