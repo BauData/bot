@@ -10,9 +10,9 @@ var self = module.exports = {
 	setup: function(config) {
 		var  oauth = Youtube.authenticate({
 		    type: "oauth",
-		    client_id: config.youtube.client_id,
-		    client_secret: config.youtube.client_secret,
-		    redirect_url: config.youtube.redirect_url
+		    client_id: config.client_id,
+		    client_secret: config.client_secret,
+		    redirect_url: config.redirect_url
 		});
 	},
 

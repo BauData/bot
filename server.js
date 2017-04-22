@@ -9,19 +9,21 @@ var socialNetworksNode = require('socialNetworksNode');
 //GLOBAL VAR
 var fileObject;
 var shader = '';
+var bot = '';
 var randomCityData;
 var weatherText = '';
 var weatherTemp = '';
 var frameLimit;
 var timing = 30 * 60 * 1000;
+var customTags = [];
 
 ATUtil.rmDir('./media');
 
 //SERVER EXPRESS
 var app = express();
-var server = app.listen(3000, "0.0.0.0");
+var server = app.listen(process.env.PORT || 3000, "0.0.0.0");
 app.use(express.static('dist'));
-app.get('/getRandomCity', sendRandomCity);
+app.get('/getRandomCity', setRandomCity);
 
 
 //WEATHER CITIES
@@ -46,7 +48,7 @@ fs.stat('city.list.json', function(err, stat) {
 });
 
 
-function sendRandomCity (request, response) {
+function setRandomCity (request, response) {
 	var randomCity = ATUtil.randomInt(0, Object.keys(jsonListCities).length);
 	randomCityData = { 
 		"cityID": jsonListCities[randomCity]._id,
@@ -56,8 +58,15 @@ function sendRandomCity (request, response) {
 		"cityLat": jsonListCities[randomCity].coord.lat
 	};
 	response.send(randomCityData);
-}
 
+	var cityTags = [
+ 		"#" + randomCityData.cityName.replace(/ /g,""),
+ 		"#" + randomCityData.cityCountry,
+ 		"#" + randomCityData.cityLon,
+ 		"#" + randomCityData.cityLat
+	];
+	customTags = customTags.concat(cityTags); 
+}
 
 //SOCKET
 var io = socket(server);
@@ -79,13 +88,19 @@ function newConnection(socket) {
 	}
 
 	function setBot (data) {
-		setFileObjectPath(data);
-		setSocialNetwork(data);
-		console.log("bot is set");
+		if(bot != data) {
+			setFileObjectPath(data);
+			setSocialNetwork(data);
+			console.log("bot is set");
+		}
+		else {
+			console.log("the bot has already been set");
+		}
+		setSocialNetworkInteraction();
 	}
 
-	function setFileObjectPath (bot) {
-		var folderPath = __dirname + '/media/' + bot /*+ '/'*/;
+	function setFileObjectPath (data) {
+		var folderPath = __dirname + '/media/' + data /*+ '/'*/;
 		fileObject = {
 	 		videoFile : folderPath + 'output.mp4',
 	 		noiseVideoFile : folderPath + 'outputnoise.mp4',
@@ -96,14 +111,23 @@ function newConnection(socket) {
 		 console.log("fileObject is set");
 	}
 
-	function setSocialNetwork (bot) {
+	function setSocialNetwork (data) {
+		socialNetworksNode.setup(require('./src/' + data + '/config'));
+	}
+
+	function setSocialNetworkInteraction () {
 		var customLocation = randomCityData.cityName;
-		socialNetworksNode.setup(require('./src/' + bot + '/config'), customLocation, timing);
+		socialNetworksNode.interaction(customLocation, timing);
 	}
 
 	function setWeather (data) {
 		weatherText = data.description;
 		weatherTemp = data.temperature;
+		var weatherTags = [
+	 		'#' + weatherText.replace(/ /g,"_"),
+	 		'#' + weatherTemp + '°C'
+	 	];
+	 	customTags = customTags.concat(weatherTags); 
 		console.log("weather fields are set");
 	}
 	function setFrameLimit(data) {
@@ -112,12 +136,12 @@ function newConnection(socket) {
 
 	function coverFrame(data) {
 		if(fileObject) {
-			//Cleaning previous media
-			ATUtil.rmDir('./media');
+			ATUtil.checkExist(fileObject.imgCover);
 			console.log("Creating a cover frame..");
 			data = data.split(',')[1]; // Get rid of the data:image/png;base64 at the beginning of the file data
 	        var buffer = new Buffer(data, 'base64');
 			fs.writeFileSync(fileObject.imgCover, buffer.toString('binary'), 'binary');
+			console.log("The cover frame is ready");
 			if(frameLimit == 1) {
 				socket.broadcast.emit('closeMsg', 1);
 				var opts = {
@@ -162,6 +186,7 @@ function newConnection(socket) {
 	}
 
 	function createVideo() {
+		ATUtil.checkExist(fileObject.videoFile);
 		console.log("Creating a video..");
 		var cmd1 = '/usr/local/bin/ffmpeg -r 30 -i ./tmp/frame-%03d.png -vcodec libx264 -acodec aac -vf "scale=1280:trunc(ow/a/2)*2" -strict experimental -vb 1024k -minrate 1024k -maxrate 1024k -bufsize 1024k -ar 44100 -pix_fmt yuv420p -threads 0 ' + fileObject.videoFile;
 		exec(cmd1, videoFinished(fileObject.videoFile));
@@ -180,6 +205,7 @@ function newConnection(socket) {
 			});
 
 			function createVideoNoise(fileParentPath) {
+				ATUtil.checkExist(fileObject.noiseVideoFile);
 				console.log("Creating a video with noisy audio..");
 				var cmd2 = '/usr/local/bin/ffmpeg -f lavfi -i aevalsrc="-2+random(0)" -y -i ' + fileParentPath + ' -c:v copy -crf 19 -preset slow -c:a aac -strict experimental -pix_fmt yuv420p -shortest ' + fileObject.noiseVideoFile;	
 				exec(cmd2, noisyVideoFinished);	
@@ -193,6 +219,7 @@ function newConnection(socket) {
 	}
 
 	function createGIF() {
+		ATUtil.checkExist(fileObject.gifFile);
 		console.log("Creating an animated gif..");
 		var cmd1 = "/usr/local/bin/convert -limit memory 900 -delay 0 -resize 25% -loop 0 ./tmp/frame-???.png " + fileObject.gifFile;
 		exec(cmd1, gifFinished(fileObject.gifFile));
@@ -211,6 +238,7 @@ function newConnection(socket) {
 			});
 
 			function createGIFLossy(fileParentPath) {
+				ATUtil.checkExist(fileObject.gifLossyFile);
 				console.log("Creating an animated lossy gif..");
 				var cmd2 = "/usr/local/bin/gifsicle -O3 --lossy=80 " + fileParentPath + " -o " + fileObject.gifLossyFile;
 				exec(cmd2, gifLossyFinished);	
@@ -225,15 +253,6 @@ function newConnection(socket) {
 }
 
 function postingAll() {
-	//todo, vengono da index.js del project ? 
-	var customTags = [
- 		"#" + randomCityData.cityName.replace(/ /g,""),
- 		"#" + randomCityData.cityCountry,
- 		"#" + randomCityData.cityLon,
- 		"#" + randomCityData.cityLat,
- 		'#' + weatherText.replace(/ /g,"_"),
- 		'#' + weatherTemp + 'C'
- 	];
  	if(frameLimit != 1) {
 		socialNetworksNode.posting(customTags, shader, fileObject);
  	}

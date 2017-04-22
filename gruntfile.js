@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-
+  var port= grunt.option('port') || 3000;
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -12,8 +12,10 @@ module.exports = function(grunt) {
         expand: true,
         cwd: 'src/',
         src: ['**/js/scripts.js'],
-        dest: 'dist/',
-        ext: '.min.js'
+        dest: 'src/'
+       // to test
+       // dest: 'dist/',
+       // ext: '.min.js'
       }
     },
     mkdir: {
@@ -36,28 +38,28 @@ module.exports = function(grunt) {
             files: ['src/**/css/*'],
             tasks: ['copy:css'],
             options: {
-                livereload: true
+                livereload: false
             }
         },
         js: {
             files: ['src/**/js/*'],
             tasks: ['clean:scripts', 'custom-concat', 'browserify:dist', 'uglify:scripts'],
             options: {
-                livereload: true
+                livereload: false
             }
         },
         index: {
             files: ['src/**/index.html'],
             tasks: ['copy:index'],
             options: {
-                livereload: true
+                livereload: false
             }
         },
         images: {
             files: ['src/**/img/*'],
             tasks: ['copy:images'],
             options: {
-                livereload: true
+                livereload: false
             }
         }
     },
@@ -103,7 +105,12 @@ module.exports = function(grunt) {
     },
     nodemon: {
       dev: {
-        script: 'server.js'
+        script: 'server.js',
+        options: {
+          env: {
+            PORT: port
+          }
+        }
       }
     },
     concurrent: {
@@ -134,7 +141,7 @@ module.exports = function(grunt) {
         'copy',
         'custom-concat',
         'browserify',
-        //'uglify',
+        'uglify',
         'concurrent'
     ];
     grunt.task.run(taskList);

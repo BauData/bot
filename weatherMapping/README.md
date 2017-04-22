@@ -1,0 +1,1 @@
+Mapping weather into colors

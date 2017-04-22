@@ -1,5 +1,3 @@
-// atutil.js
-// ========
 "use strict";
 
 var twitterNode;
@@ -8,85 +6,116 @@ var vimeoNode;
 var tumblrNode;
 var youtubeNode;
 //var flickrNode;
-var location;
+var intervalId = 0;
 var tags;
 
 var socialNetworksNode = function() {
 
-    function setup(config, customLocation, timing) {
-        console.log("Accounts verification and automatic interactions on social networks");
+    function setup(config) {
+        console.log("Social networks settings");
+        
         tags = config.tags;
-        //flickrNode = require('./flickrNode');
+        reset();
+
         if(config.instagram) {
             instagramNode = require('./instagramNode');
-            instagramNode.setup(config);
+            instagramNode.setup(config.instagram, tags);
         }
         if(config.twitter) {
             twitterNode = require('./twitterNode');
-            twitterNode.setup(config);
+            twitterNode.setup(config.twitter, tags);
         }
         if(config.vimeo) {
             vimeoNode = require('./vimeoNode');
-            vimeoNode.setup(config);
+            vimeoNode.setup(config.vimeo);
         }
         if(config.tumblr) {
             tumblrNode = require('./tumblrNode');
-            tumblrNode.setup(config);
+            tumblrNode.setup(config.tumblr, tags);
         }
         if(config.youtube) {
             youtubeNode = require('./youtubeNode');
-            youtubeNode.setup(config);
+            youtubeNode.setup(config.youtube);
         }
+        //flickrNode = require('./flickrNode');
         //flickrNode.setup(config);
-        location = customLocation;
-        setInterval(interacting, timing);
-
-        function interacting() {
-            if(config.instagram) {
-                instagramNode.randomInteraction(location);
-            }
-            if(config.vimeo) {
-                vimeoNode.randomInteraction();
-            }
-            if(config.tumblr) {
-                tumblrNode.randomInteraction();
-            }
-        }
     }
 
     function posting(customTags, text, fileObject) {
         console.log("Posting on social networks");
-        location = customTags[0]; //the first array element is the location
         tags = tags.concat(customTags);
         var fullTextToPost = tags.join(" ") + " " + text;
         var shortTextToPost = tags.join(" ").substring(0, 140);
         var tagsComma = tags.join(", ");
         var videoTitle = customTags.join(" ").replace(/#/g," ");
-
-        twitterNode.postingArtwork(fileObject.videoFile, shortTextToPost);
-        instagramNode.postingArtwork(fileObject.noiseVideoFile, fileObject.imgVideoCover, fullTextToPost);
-        vimeoNode.postingArtwork(fileObject.videoFile, videoTitle, text);
-        tumblrNode.postingArtwork(fileObject.gifLossyFile, text, tagsComma);
-        youtubeNode.postingArtwork(fileObject.videoFile, text, videoTitle);
+        if(twitterNode) {
+            twitterNode.postingArtwork(fileObject.videoFile, shortTextToPost);
+        }
+        if(instagramNode) {
+            instagramNode.postingArtwork(fileObject.noiseVideoFile, fileObject.imgVideoCover, fullTextToPost);
+        }
+        if(vimeoNode) {
+            vimeoNode.postingArtwork(fileObject.videoFile, videoTitle, text);
+        }
+        if(tumblrNode) {
+            tumblrNode.postingArtwork(fileObject.gifLossyFile, text, tagsComma);
+        }
+        if(youtubeNode) {
+            youtubeNode.postingArtwork(fileObject.videoFile, text, videoTitle);
+        }
     }
 
     function postingPhoto(customTags, text, file) {
         console.log("Posting on social networks");
-        location = customTags[0]; //the first array element is the location
         tags = tags.concat(customTags);
         var fullTextToPost = tags.join(" ") + " " + text;
         var shortTextToPost = tags.join(" ").substring(0, 140);
         var tagsComma = tags.join(", ");
+        if(twitterNode) {
+            twitterNode.postingPhoto(file, shortTextToPost);
+        }
+        if(instagramNode) {
+            instagramNode.postingPhoto(file, fullTextToPost);
+        }
+        if(tumblrNode) {
+            tumblrNode.postingArtwork(file, text, tagsComma);
+        }
+    }
 
-        twitterNode.postingPhoto(file, shortTextToPost);
-        instagramNode.postingPhoto(file, fullTextToPost);
-        tumblrNode.postingArtwork(file, text, tagsComma);
+    function interaction(customLocation, timing) {
+        if(intervalId != 0) {
+            clearInterval(intervalId);
+            intervalId = 0;
+        }
+        intervalId = setInterval(interacting, timing);
+
+        function interacting() {
+            console.log("Social networks interaction");
+            if(instagramNode) {
+                instagramNode.randomInteraction(customLocation);
+            }
+            if(vimeoNode) {
+                vimeoNode.randomInteraction();
+            }
+            if(tumblrNode) {
+                tumblrNode.randomInteraction();
+            }
+        }
+    }
+
+    function reset() {
+        twitterNode = null;
+        instagramNode = null;
+        vimeoNode = null;
+        tumblrNode = null;
+        youtubeNode = null;
     }
 
     return {
         setup: setup,
         posting: posting,
-        postingPhoto: postingPhoto
+        postingPhoto: postingPhoto,
+        interaction: interaction
     }
 };
 

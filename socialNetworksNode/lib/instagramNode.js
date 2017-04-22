@@ -13,13 +13,13 @@ var comment;
 var tags;
 
 var self = module.exports = {
-	setup: function (config) {
-		username = config.instagram.username;
-		password = config.instagram.password;
+	setup: function (config, configTags) {
+		username = config.username;
+		password = config.password;
     	device = new Client.Device(username);
     	storage = new Client.CookieFileStorage(__dirname + "/" + username + '.json');
-    	comment = config.instagram.comment;
-    	tags = config.tags.map( function(item, index) {
+    	comment = config.comment;
+    	tags = configTags.map( function(item, index) {
     		return item.replace('#','')
 		});
     },
@@ -39,18 +39,9 @@ var self = module.exports = {
 			        console.log("INSTAGRAM: video posted")
 			    })
 			    .catch(function(e) { 
-				    console.log("INSTAGRAM: Posting a photo instead..");
-					Client.Session.create(device, storage, username, password)
-					.then(function(session) { 
-						return [session, Client.Upload.photo(session, picturePath)]
-					})
-				    .spread(function(session, upload) { 
-				        return Client.Media.configurePhoto(session, upload.params.uploadId, textMedia)
-				    })
-					.then(function(medium) {
-				        console.log("INSTAGRAM: photo posted")
-				    })
-				 })
+				    console.log("INSTAGRAM: Error posting video. Let's try the picture..");
+					self.postingPhoto(picturePath,textMedia);
+				})
 			}
 		});
 	},

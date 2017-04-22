@@ -9,9 +9,9 @@ var channelToSpam;
 
 var self = module.exports = {
   setup: function (config) {
-    lib = new Vimeo(config.vimeo.CLIENT_ID, config.vimeo.CLIENT_SECRET, config.vimeo.ACCESS_TOKEN);
-    textComment = config.vimeo.comment;
-    channelToSpam = config.vimeo.channel;
+    lib = new Vimeo(config.CLIENT_ID, config.CLIENT_SECRET, config.ACCESS_TOKEN);
+    textComment = config.comment;
+    channelToSpam = config.channel;
   },
 
   postingArtwork: function (filePath, textName, textDescription) {

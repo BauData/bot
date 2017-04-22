@@ -8,8 +8,8 @@ var tags;
 
 var self = module.exports = {
 
-  setup: function (config) {
-  	T = new Twit(config.twitter);
+  setup: function (config, configTags) {
+  	T = new Twit(config);
   	self.setUsername();
     var streamUser = T.stream('user');
 	streamUser.on('follow', self.followed);
@@ -19,7 +19,7 @@ var self = module.exports = {
 	streamUser.on('error', (err) => {
 	  console.log('TWITTER: error!');
 	});
-	tags = config.tags;
+	tags = configTags;
 	var tagString = tags.join(",");
 	var streamTwitter = T.stream('statuses/filter', { track: tagString });
 	streamTwitter.on('tweet', self.retweet);

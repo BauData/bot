@@ -8,15 +8,15 @@ var currentBlogName;
 var tags;
 
 var self = module.exports = {
-	setup: function(config) {
+	setup: function(config, configTags) {
 		client = tumblr.createClient({
-			consumer_key: config.tumblr.consumer_key,
-			consumer_secret: config.tumblr.consumer_secret,
-			token: config.tumblr.token,
-			token_secret: config.tumblr.token_secret
+			consumer_key: config.consumer_key,
+			consumer_secret: config.consumer_secret,
+			token: config.token,
+			token_secret: config.token_secret
 		});
-		currentBlogName = config.tumblr.blogName;
-		tags = config.tags.map( function(item, index) {
+		currentBlogName = config.blogName;
+		tags = configTags.map( function(item, index) {
     		return item.replace('#','')
 		});
 	},
