@@ -47,7 +47,7 @@ var socialNetworksNode = function() {
         var fullTextToPost = tags.join(" ") + " " + text;
         var shortTextToPost = tags.join(" ").substring(0, 140);
         var tagsComma = tags.join(", ");
-        var videoTitle = customTags.join(" ").replace(/#/g," ");
+        var videoTitle = customTags.join(" ").replace(/#/g," ").substring(0, 180);;
         if(twitterNode) {
             twitterNode.postingArtwork(fileObject.videoFile, shortTextToPost);
         }

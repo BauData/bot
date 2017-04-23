@@ -47,8 +47,7 @@
     "three": "^0.84.0",
     "tween.js": "^16.6.0",
     "wait-on": "^2.0.2",
-    "weatherMapping": "file:weatherMapping/weatherMapping-0.0.1.tgz",
-    "youtube-api": "^2.0.8"
+    "weatherMapping": "file:weatherMapping/weatherMapping-0.0.1.tgz"
   },
   "devDependencies": {}
 }

@@ -2,6 +2,7 @@
 // ========
 var fs = require('fs');
 var Twit = require('twit');
+var Sentencer = require('sentencer');
 var T;
 var userName;
 var tags;
@@ -105,7 +106,8 @@ var self = module.exports = {
 	var screenNameTarget = event.target.screen_name;
 	if (screenName != userName && userName) {
 		console.log("TWITTER: Follow event");
-  		var text = '.@' + screenName + " do you like gradients?";
+		var nouns = Sentencer.make("{{ nouns }}");
+  		var text = '.@' + screenName + ", do you like " + nouns + "?";
 		self.tweetIt(text);
 		self.friendship(event.source.id_str);
   	}
@@ -125,7 +127,8 @@ var self = module.exports = {
 	var from = eventMsg.user.screen_name;
 	if (replyTo === userName && replyTo && from != userName) {
 		console.log("TWITTER: Tweet event");
-		var newTweet = '.@' + from + ' thank you for tweeting me!';
+		var sentence = Sentencer.make(" {{ adjective }} {{ nouns }} are {{ adjective }}.");
+		var newTweet = '.@' + from + ' thank you for tweeting me! ' + sentence;
 		self.tweetIt(newTweet);
 		self.friendship(eventMsg.user.id_str);
 	}
