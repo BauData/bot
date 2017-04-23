@@ -17,7 +17,6 @@ var frameLimit;
 var timing = 30 * 60 * 1000;
 var customTags = [];
 
-ATUtil.rmDir('./media');
 
 //SERVER EXPRESS
 var app = express();
