@@ -88,6 +88,7 @@ function newConnection(socket) {
 
 	function setBot (data) {
 		if(bot != data) {
+			bot = data;
 			setFileObjectPath(data);
 			setSocialNetwork(data);
 			console.log("bot is set");
