@@ -52,7 +52,7 @@ var socialNetworksNode = function() {
             twitterNode.postingArtwork(fileObject.videoFile, shortTextToPost);
         }
         if(instagramNode) {
-            instagramNode.postingArtwork(fileObject.noiseVideoFile, fileObject.imgVideoCover, fullTextToPost);
+            instagramNode.postingArtwork(fileObject.noiseVideoFile, fileObject.imgCover, fullTextToPost);
         }
         if(vimeoNode) {
             vimeoNode.postingArtwork(fileObject.videoFile, videoTitle, text);

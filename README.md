@@ -52,3 +52,13 @@ tape :x
 !!!every hour
 https://crontab.guru/every-4-hours
 
+TMUX
+
+https://askubuntu.com/questions/8653/how-to-keep-processes-running-after-ending-ssh-session
+
+    ssh into the remote machine
+    start tmux by typing tmux into the shell
+    start the process you want inside the started tmux session
+    leave/detach the tmux session by typing Ctrl+b and then d
+
+
