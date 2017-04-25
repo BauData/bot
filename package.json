@@ -41,7 +41,7 @@
     "grunt-nodemon": "^0.4.2",
     "node-rest-client": "^3.0.7",
     "openweathermap": "^1.0.0",
-    "socialNetworksNode": "file:socialNetworksNode/socialNetworksNode-0.0.2.tgz",
+    "socialNetworksNode": "file:socialNetworksNode/socialNetworksNode-0.0.3.tgz",
     "socket.io": "^1.7.3",
     "socket.io-client": "^1.7.3",
     "three": "^0.84.0",
