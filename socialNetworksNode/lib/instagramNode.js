@@ -20,7 +20,7 @@ var self = module.exports = {
     	storage = new Client.CookieFileStorage(__dirname + "/" + username + '.json');
     	comment = config.comment;
     	tags = configTags.map( function(item, index) {
-    		return item.replace('#','')
+    		return item.replace('#', '')
 		});
     },
 
@@ -40,7 +40,7 @@ var self = module.exports = {
 			    })
 			    .catch(function(e) { 
 				    console.log("INSTAGRAM: Error posting video. Let's try the picture..");
-					self.postingPhoto(picturePath,textMedia);
+					self.postingPhoto(picturePath, textMedia);
 				})
 			}
 		});

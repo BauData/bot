@@ -67,8 +67,7 @@ var self = module.exports = {
 			  // now we can assign alt text to the media, for use by screen readers and 
 			  // other text-based presentations and interpreters 
 			  var mediaIdStr = data.media_id_string;
-			  var altText = textMedia;
-			  var meta_params = { media_id: mediaIdStr, alt_text: { text: altText } };
+			  var meta_params = { media_id: mediaIdStr, alt_text: { text: textMedia } };
  
 			  T.post('media/metadata/create', meta_params, function (err, data, response) {
 			    if (!err) {
