@@ -6,6 +6,7 @@ var exec = require('child_process').exec;
 var waitOn = require('wait-on');
 var socialNetworksNode = require('socialNetworksNode');
 
+
 //GLOBAL VAR
 var fileObject;
 var shader = '';
@@ -53,16 +54,16 @@ function setRandomCity (request, response) {
 		"cityID": jsonListCities[randomCity]._id,
 		"cityName": jsonListCities[randomCity].name,
 		"cityCountry": jsonListCities[randomCity].country,
-		"cityLon": jsonListCities[randomCity].coord.lon,
-		"cityLat": jsonListCities[randomCity].coord.lat
+		"cityLat": jsonListCities[randomCity].coord.lat,
+		"cityLon": jsonListCities[randomCity].coord.lon
 	};
 	response.send(randomCityData);
 
 	var cityTags = [
  		"#" + randomCityData.cityName.replace(/ /g,""),
  		"#" + randomCityData.cityCountry,
- 		"#" + randomCityData.cityLon,
- 		"#" + randomCityData.cityLat
+ 		"#" + randomCityData.cityLat,
+ 		"#" + randomCityData.cityLon
 	];
 	customTags = customTags.concat(cityTags); 
 }
@@ -116,8 +117,7 @@ function newConnection(socket) {
 	}
 
 	function setSocialNetworkInteraction () {
-		var customLocation = randomCityData.cityName;
-		socialNetworksNode.interaction(customLocation, timing);
+		socialNetworksNode.interaction(randomCityData, timing);
 	}
 
 	function setWeather (data) {

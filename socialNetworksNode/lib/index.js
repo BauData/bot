@@ -5,7 +5,7 @@ var instagramNode;
 var vimeoNode;
 var tumblrNode;
 var youtubeNode;
-//var flickrNode;
+var flickrNode;
 var intervalId = 0;
 var tags;
 
@@ -37,8 +37,10 @@ var socialNetworksNode = function() {
             youtubeNode = require('./youtubeNode');
             youtubeNode.setup(config.youtube);
         }
-        //flickrNode = require('./flickrNode');
-        //flickrNode.setup(config);
+        if(config.flickr) {
+            flickrNode = require('./flickrNode');
+            flickrNode.setup(config.flickr, tags);
+        }
     }
 
     function posting(customTags, text, fileObject) {
@@ -47,7 +49,9 @@ var socialNetworksNode = function() {
         var fullTextToPost = tags.join(" ") + " " + text;
         var shortTextToPost = tags.join(" ").substring(0, 140);
         var tagsComma = tags.join(", ");
-        var videoTitle = customTags.join(" ").replace(/#/g," ").substring(0, 128);;
+        var title = customTags.join(" ").replace(/#/g," ").substring(0, 128);
+        var lat = tags[tags.length - 4].replace(/#/g,"");
+        var lon = tags[tags.length - 3].replace(/#/g,"");
         if(twitterNode) {
             twitterNode.postingArtwork(fileObject.videoFile, shortTextToPost);
         }
@@ -55,13 +59,16 @@ var socialNetworksNode = function() {
             instagramNode.postingArtwork(fileObject.noiseVideoFile, fileObject.imgCover, fullTextToPost);
         }
         if(vimeoNode) {
-            vimeoNode.postingArtwork(fileObject.videoFile, videoTitle, text);
+            vimeoNode.postingArtwork(fileObject.videoFile, title, text);
         }
         if(tumblrNode) {
             tumblrNode.postingArtwork(fileObject.gifLossyFile, text, tagsComma);
         }
         if(youtubeNode) {
-            youtubeNode.postingArtwork(fileObject.videoFile, text, videoTitle);
+            youtubeNode.postingArtwork(fileObject.videoFile, text, title);
+        }
+        if(flickrNode) {
+            flickrNode.postingArtwork(fileObject.imgCover, text, title, lat, lon);
         }
     }
 
@@ -71,6 +78,9 @@ var socialNetworksNode = function() {
         var fullTextToPost = tags.join(" ") + " " + text;
         var shortTextToPost = tags.join(" ").substring(0, 140);
         var tagsComma = tags.join(", ");
+        var title = customTags.join(" ").replace(/#/g," ");
+        var lat = tags[tags.length - 4].replace(/#/g,"");
+        var lon = tags[tags.length - 3].replace(/#/g,"");
         if(twitterNode) {
             twitterNode.postingPhoto(file, shortTextToPost);
         }
@@ -80,9 +90,12 @@ var socialNetworksNode = function() {
         if(tumblrNode) {
             tumblrNode.postingArtwork(file, text, tagsComma);
         }
+        if(flickrNode) {
+            flickrNode.postingArtwork(file, text, title, lat, lon);
+        }
     }
 
-    function interaction(customLocation, timing) {
+    function interaction(cityData, timing) {
         if(intervalId != 0) {
             clearInterval(intervalId);
             intervalId = 0;
@@ -92,13 +105,16 @@ var socialNetworksNode = function() {
         function interacting() {
             console.log("Social networks interaction");
             if(instagramNode) {
-                instagramNode.randomInteraction(customLocation);
+                instagramNode.randomInteraction(cityData.name);
             }
             if(vimeoNode) {
                 vimeoNode.randomInteraction();
             }
             if(tumblrNode) {
                 tumblrNode.randomInteraction();
+            }
+            if(flickrNode) {
+                flickrNode.randomInteraction(cityData.coord.lat, cityData.coord.lon);
             }
         }
     }
@@ -109,6 +125,7 @@ var socialNetworksNode = function() {
         vimeoNode = null;
         tumblrNode = null;
         youtubeNode = null;
+        flickrNode = null;
     }
 
     return {

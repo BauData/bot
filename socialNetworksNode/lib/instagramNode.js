@@ -5,11 +5,11 @@ var ATUtil = require('atutil');
 var Client = require('instagram-private-api').V1;
 var _ = require('underscore');
 var should = require('should');
+var Sentencer = require('sentencer');
 var device;
 var storage;
 var username;
 var password;
-var comment;
 var tags;
 
 var self = module.exports = {
@@ -18,7 +18,6 @@ var self = module.exports = {
 		password = config.password;
     	device = new Client.Device(username);
     	storage = new Client.CookieFileStorage(__dirname + "/" + username + '.json');
-    	comment = config.comment;
     	tags = configTags.map( function(item, index) {
     		return item.replace('#', '')
 		});
@@ -98,6 +97,7 @@ var self = module.exports = {
     	.spread(function(session, media) {
     		var randomMedia = ATUtil.randomInt(0, media.length - 1); 
     		var media_id = media[randomMedia].id; 	
+    		var comment = Sentencer.make("{{ adjective }}");
     		return Client.Comment.create(session, media_id, comment)
     	})
     	.then(function(comment) {

@@ -3,14 +3,13 @@
 var ATUtil = require('atutil');
 var fs = require('fs');
 var Vimeo = require('vimeo').Vimeo;
+var Sentencer = require('sentencer');
 var lib;
-var textComment;
 var channelToSpam;
 
 var self = module.exports = {
   setup: function (config) {
     lib = new Vimeo(config.CLIENT_ID, config.CLIENT_SECRET, config.ACCESS_TOKEN);
-    textComment = config.comment;
     channelToSpam = config.channel;
   },
 
@@ -162,6 +161,7 @@ var self = module.exports = {
                         }
                     });
                     //POST VIDEO COMMENT
+                    var textComment = Sentencer.make("{{ adjective }}");
                     lib.request({
                         method: 'POST',
                         path: '/videos/' + video_id + '/comments',
