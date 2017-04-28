@@ -7,7 +7,7 @@
   ],
   "main": "./lib/index",
   "dependencies": {
-    "flickr-sdk": "^2.0.1",
+    "flickrapi": "^0.6.0",
     "instagram-private-api": "^0.5.15",
     "sentencer": "^0.1.5",
     "should": "^11.2.1",

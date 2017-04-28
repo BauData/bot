@@ -5,10 +5,12 @@ var fs = require('fs');
 var Flickr = require("flickrapi");
 var Sentencer = require('sentencer');
 var flickrOptions;
+var userId;
 
 var self = module.exports = {
   setup: function (config, configTags) {
     flickrOptions = config;
+    userId = config.user_id;
     tags = configTags.map( function(item, index) {
         return item.replace('#', '')
     });
@@ -90,9 +92,9 @@ var self = module.exports = {
                     console.log("FLICKR error: ", err); 
                   }
                   else {
-                    flickr.people.getPhotos({user_id: "me"}, function(err,res) {
+                    flickr.people.getPhotos({user_id: userId}, function(err,res) {
                       if(err) { 
-                        console.log("FLICKR error: ", err); 
+                        console.log("FLICKR error user: ", err); 
                       }
                       else {
                         if(res.photos.photo.length > 0) {
@@ -149,7 +151,7 @@ var self = module.exports = {
                     console.log("FLICKR error: ", err); 
                   }
                   else {
-                    console.log('FLICKR comment ' + comment + ' posted to ' + photoId);
+                    console.log('FLICKR location comment ' + comment + ' posted to ' + photoId);
                   }
                 });
             }

@@ -105,7 +105,7 @@ var socialNetworksNode = function() {
         function interacting() {
             console.log("Social networks interaction");
             if(instagramNode) {
-                instagramNode.randomInteraction(cityData.name);
+                instagramNode.randomInteraction(cityData.cityName);
             }
             if(vimeoNode) {
                 vimeoNode.randomInteraction();
@@ -114,7 +114,7 @@ var socialNetworksNode = function() {
                 tumblrNode.randomInteraction();
             }
             if(flickrNode) {
-                flickrNode.randomInteraction(cityData.coord.lat, cityData.coord.lon);
+                flickrNode.randomInteraction(cityData.cityLat, cityData.cityLon);
             }
         }
     }
