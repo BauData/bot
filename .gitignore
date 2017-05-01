@@ -1,6 +1,6 @@
-!.gitignore
 .grunt
 
+data
 dist
 node_modules
 tmp

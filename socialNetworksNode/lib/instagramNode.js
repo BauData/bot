@@ -82,6 +82,9 @@ var self = module.exports = {
 	    .then(function(relationship) {
 	        console.log("INSTAGRAM: relationship created")
 	    })
+		.catch(function(e) { 
+		    console.log("INSTAGRAM: Error creating relationship");
+		})
 
 		Client.Session.create(device, storage, username, password)
 		.then(function(session) { 
@@ -102,6 +105,9 @@ var self = module.exports = {
     	})
     	.then(function(comment) {
 			console.log("INSTAGRAM: added comment")
+		})
+		.catch(function(e) { 
+		    console.log("INSTAGRAM: Error adding a comment");
 		})
 
 
@@ -132,6 +138,9 @@ var self = module.exports = {
 		.then(function(m) {
 		    m.params.hasLiked.should.equal(true);
 			console.log("INSTAGRAM: like media " + m.id)
+		})
+		.catch(function(e) { 
+		    console.log("INSTAGRAM: Error finding location or media in a location");
 		})
 	}
 };
