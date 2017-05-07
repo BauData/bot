@@ -188,7 +188,7 @@ function newConnection(socket) {
 
 	function createVideo() {
 		console.log("Creating a video..");
-		var cmd1 = '/usr/local/bin/ffmpeg -r 30 -i ./tmp/frame-%03d.png -vcodec libx264 -acodec aac -vf "scale=1280:trunc(ow/a/2)*2" -strict experimental -vb 1024k -minrate 1024k -maxrate 1024k -bufsize 1024k -ar 44100 -pix_fmt yuv420p -threads 0 ' + fileObject.videoFile;
+		var cmd1 = '/usr/local/bin/ffmpeg -r 30 -i ./tmp/frame-%03d.png -vcodec libx264 -acodec aac -vf "scale=1280:trunc(ow/a/2)*2" -vb 1024k -minrate 1024k -maxrate 1024k -bufsize 1024k -ar 44100 -pix_fmt yuv420p -threads 0 ' + fileObject.videoFile;
 		exec(cmd1, videoFinished(fileObject.videoFile));
 
 		function videoFinished(filePath) {
@@ -207,7 +207,7 @@ function newConnection(socket) {
 			function createVideoNoise(fileParentPath) {
 				
 				console.log("Creating a video with noisy audio..");
-				var cmd2 = '/usr/local/bin/ffmpeg -f lavfi -i aevalsrc="-2+random(0)" -y -i ' + fileParentPath + ' -c:v copy -crf 19 -preset slow -c:a aac -strict experimental -pix_fmt yuv420p -shortest ' + fileObject.noiseVideoFile;	
+				var cmd2 = '/usr/local/bin/ffmpeg -y -f lavfi -i aevalsrc="-2+random(0)" -i ' + fileParentPath + ' -c:v copy -preset slow -crf 19 -c:a aac -pix_fmt yuv420p -shortest ' + fileObject.noiseVideoFile;	
 				exec(cmd2, noisyVideoFinished);	
 
 				function noisyVideoFinished() {
