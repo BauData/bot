@@ -81,7 +81,6 @@ var socialNetworksNode = function() {
         var title = customTags.join(" ").replace(/#/g," ");
         var lat = customTags[customTags.length - 4].replace(/#/g,"");
         var lon = customTags[customTags.length - 3].replace(/#/g,"");
-        console.log(fullTextToPost);
         if(twitterNode) {
             twitterNode.postingPhoto(file, shortTextToPost);
         }
