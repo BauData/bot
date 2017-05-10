@@ -45,13 +45,13 @@ var socialNetworksNode = function() {
 
     function posting(customTags, text, fileObject) {
         console.log("Posting on social networks");
-        tags = tags.concat(customTags);
-        var fullTextToPost = tags.join(" ") + " " + text;
-        var shortTextToPost = tags.join(" ").substring(0, 140);
-        var tagsComma = tags.join(", ");
+        customTags = tags.concat(customTags);
+        var fullTextToPost = customTags.join(" ") + " " + text;
+        var shortTextToPost = customTags.join(" ").substring(0, 140);
+        var tagsComma = customTags.join(", ");
         var title = customTags.join(" ").replace(/#/g," ").substring(0, 128);
-        var lat = tags[tags.length - 4].replace(/#/g,"");
-        var lon = tags[tags.length - 3].replace(/#/g,"");
+        var lat = customTags[customTags.length - 4].replace(/#/g,"");
+        var lon = customTags[customTags.length - 3].replace(/#/g,"");
         if(twitterNode) {
             twitterNode.postingArtwork(fileObject.videoFile, shortTextToPost);
         }
@@ -74,13 +74,14 @@ var socialNetworksNode = function() {
 
     function postingPhoto(customTags, text, file) {
         console.log("Posting on social networks");
-        tags = tags.concat(customTags);
-        var fullTextToPost = tags.join(" ") + " " + text;
-        var shortTextToPost = tags.join(" ").substring(0, 140);
-        var tagsComma = tags.join(", ");
+        customTags = tags.concat(customTags);
+        var fullTextToPost = customTags.join(" ") + " " + text;
+        var shortTextToPost = customTags.join(" ").substring(0, 140);
+        var tagsComma = customTags.join(", ");
         var title = customTags.join(" ").replace(/#/g," ");
-        var lat = tags[tags.length - 4].replace(/#/g,"");
-        var lon = tags[tags.length - 3].replace(/#/g,"");
+        var lat = customTags[customTags.length - 4].replace(/#/g,"");
+        var lon = customTags[customTags.length - 3].replace(/#/g,"");
+        console.log(fullTextToPost);
         if(twitterNode) {
             twitterNode.postingPhoto(file, shortTextToPost);
         }
