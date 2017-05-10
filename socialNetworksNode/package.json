@@ -8,7 +8,7 @@
   "main": "./lib/index",
   "dependencies": {
     "flickrapi": "^0.6.0",
-    "instagram-private-api": "^0.5.15",
+    "instagram-private-api": "^0.5.16",
     "sentencer": "^0.1.5",
     "should": "^11.2.1",
     "tumblr.js": "^1.1.1",

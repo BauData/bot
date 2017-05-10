@@ -49,6 +49,7 @@ fs.stat('city.list.json', function(err, stat) {
 
 
 function setRandomCity (request, response) {
+	customTags = [];
 	var randomCity = ATUtil.randomInt(0, Object.keys(jsonListCities).length);
 	randomCityData = { 
 		"cityID": jsonListCities[randomCity]._id,
