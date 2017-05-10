@@ -23,7 +23,8 @@ var self = module.exports = {
 	tags = configTags;
 	var tagString = tags.join(",");
 	var streamTwitter = T.stream('statuses/filter', { track: tagString });
-	streamTwitter.on('tweet', self.retweet);
+	//TOO SPAM FOR NOW
+	//streamTwitter.on('tweet', self.retweet);
 	streamTwitter.on('error', (err) => {
 	  console.log('TWITTER: error!');
 	});
