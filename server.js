@@ -17,6 +17,8 @@ var weatherTemp = '';
 var frameLimit;
 var timing = 30 * 60 * 1000;
 var customTags = [];
+//checking system to not call the postingAll method two times
+var posting = false; 
 
 
 //SERVER EXPRESS
@@ -145,18 +147,23 @@ function newConnection(socket) {
 			console.log("The cover frame is ready");
 			if(frameLimit == 1) {
 				socket.broadcast.emit('closeMsg', 1);
-				var opts = {
-					resources: [fileObject.imgCover],
-					window: 6000
+
+				if(!posting) {
+					var opts = {
+						resources: [fileObject.imgCover],
+						window: 6000
+					};
+					posting = true;
+					waitOn(opts, function (err) {
+						if (err) { 
+						  	return console.log(err); 
+						}
+						//removing all tmp images
+						ATUtil.rmDir('./tmp');
+						posting = false;
+						postingAll();
+					});
 				}
-				waitOn(opts, function (err) {
-				  if (err) { 
-				  	return console.log(err); 
-				  }
-				  //removing all temp images
-				  ATUtil.rmDir('./tmp');
-				  postingAll();
-				});
 			}
 		}
 	}
@@ -171,18 +178,23 @@ function newConnection(socket) {
 	        	deleteFiles();
 				createVideo();
 				createGIF();
-				var opts = {
-					resources: [fileObject.noiseVideoFile, fileObject.gifLossyFile],
-					window: 60000
+
+				if(!posting) {
+					var opts = {
+						resources: [fileObject.noiseVideoFile, fileObject.gifLossyFile],
+						window: 60000
+					};
+					posting = true;
+					waitOn(opts, function (err) {
+					  if (err) { 
+					  	return console.log(err); 
+					  }
+					  //removing all tmp images
+					  ATUtil.rmDir('./tmp');
+					  posting = false;
+					  postingAll();
+					});
 				}
-				waitOn(opts, function (err) {
-				  if (err) { 
-				  	return console.log(err); 
-				  }
-				  //removing all temp images
-				  ATUtil.rmDir('./tmp');
-				  postingAll();
-				});
 	        }
 	    }
 	}
