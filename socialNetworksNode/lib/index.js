@@ -59,7 +59,8 @@ var socialNetworksNode = function() {
             instagramNode.postingArtwork(fileObject.noiseVideoFile, fileObject.imgCover, fullTextToPost);
         }
         if(vimeoNode) {
-            vimeoNode.postingArtwork(fileObject.videoFile, title, text);
+            //VIMEO accepts 5000 chars max
+            vimeoNode.postingArtwork(fileObject.videoFile, title, text.substring(0, 5000));
         }
         if(tumblrNode) {
             tumblrNode.postingArtwork(fileObject.gifLossyFile, text, tagsComma);

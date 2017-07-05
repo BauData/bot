@@ -120,7 +120,7 @@ var self = module.exports = {
                         if(res.photos.photo.length > 0){
                           var randomPhoto = ATUtil.randomInt(0, res.photos.photo.length - 1);
                           var photoId = res.photos.photo[randomPhoto].id;
-                          var comment = Sentencer.make("{{ nouns }}");
+                          var comment = Sentencer.make("{{ adjective }}");
                           flickr.photos.comments.addComment({photo_id: photoId, comment_text: comment}, function(err,res) {
                             if(err) { 
                               console.log("FLICKR error: ", err); 
